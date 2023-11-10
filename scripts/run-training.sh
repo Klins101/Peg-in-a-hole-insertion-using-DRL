@@ -8,7 +8,7 @@ logs_folder=/home/$USER/Desktop
 series_name=tutorial_training
 config=./configs/config.yml
 seed=42
-
+% training
 if [ ! -d $env_name ]
 then
   echo "Have not found existing $env_name, creating a new one"

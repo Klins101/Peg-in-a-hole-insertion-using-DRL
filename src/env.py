@@ -11,6 +11,8 @@ from pyrep import PyRep, objects
 from catalyst_rl.rl.core import EnvironmentSpec
 from catalyst_rl.rl.utils import extend_space
 
+# Setup environment
+
 
 class CoppeliaSimEnvWrapper(EnvironmentSpec):
     def __init__(self, visualize=True,
@@ -28,7 +30,8 @@ class CoppeliaSimEnvWrapper(EnvironmentSpec):
         self.env.step()
 
         # Task related initialisations in Simulator
-        self.vision_sensor = objects.vision_sensor.VisionSensor("Vision_sensor")
+        self.vision_sensor = objects.vision_sensor.VisionSensor(
+            "Vision_sensor")
         self.gripper = objects.dummy.Dummy("UR5_target")
         self.gripper_zero_pose = self.gripper.get_pose()
         self.goal = objects.dummy.Dummy("goal_target")
@@ -36,23 +39,26 @@ class CoppeliaSimEnvWrapper(EnvironmentSpec):
         self.goal_STL_zero_pose = self.goal_STL.get_pose()
         self.grasped_STL = objects.shape.Shape("Peg")
         self.stacking_area = objects.shape.Shape("Plane")
-        self.vision_sensor = objects.vision_sensor.VisionSensor("Vision_sensor")
+        self.vision_sensor = objects.vision_sensor.VisionSensor(
+            "Vision_sensor")
 
         self.step_counter = 0
         self.max_step_count = 100
         self.target_pose = None
         self.initial_distance = None
         self.image_width, self.image_height = 320, 240
-        self.vision_sensor.set_resolution((self.image_width, self.image_height))
+        self.vision_sensor.set_resolution(
+            (self.image_width, self.image_height))
         self._history_len = 1
 
         self._observation_space = Dict(
-                {"cam_image": Box(0, 255,
-                                  [self.image_height, self.image_width, 1],
-                                  dtype=np.uint8)})
+            {"cam_image": Box(0, 255,
+                              [self.image_height, self.image_width, 1],
+                              dtype=np.uint8)})
 
         self._action_space = Box(-1, 1, (3,))
-        self._state_space = extend_space(self._observation_space, self._history_len)
+        self._state_space = extend_space(
+            self._observation_space, self._history_len)
 
     @property
     def history_len(self):
@@ -82,7 +88,8 @@ class CoppeliaSimEnvWrapper(EnvironmentSpec):
 
         # Reward calculations
         success_reward = self.success_check()
-        distance_reward = (prev_distance_to_goal - self.distance_to_goal()) / self.initial_distance
+        distance_reward = (prev_distance_to_goal -
+                           self.distance_to_goal()) / self.initial_distance
 
         reward = distance_reward + success_reward
 
@@ -119,7 +126,8 @@ class CoppeliaSimEnvWrapper(EnvironmentSpec):
         goal_position = self.goal_STL_zero_pose[:3]
         # 2D goal randomization
         self.target_pose = [goal_position[0] + (2 * np.random.rand() - 1.) * 0.1,
-                            goal_position[1] + (2 * np.random.rand() - 1.) * 0.1,
+                            goal_position[1] +
+                            (2 * np.random.rand() - 1.) * 0.1,
                             goal_position[2]]
         self.target_pose = np.append(self.target_pose,
                                      self.goal_STL_zero_pose[3:]).tolist()
@@ -139,7 +147,8 @@ class CoppeliaSimEnvWrapper(EnvironmentSpec):
 
     def get_observation(self):
         cam_image = self.vision_sensor.capture_rgb()
-        gray_image = np.uint8(cv2.cvtColor(cam_image, cv2.COLOR_BGR2GRAY) * 255)
+        gray_image = np.uint8(cv2.cvtColor(
+            cam_image, cv2.COLOR_BGR2GRAY) * 255)
         obs_image = np.expand_dims(gray_image, axis=2)
         return {"cam_image": obs_image}
 
@@ -157,5 +166,6 @@ class CoppeliaSimEnvWrapper(EnvironmentSpec):
     def apply_controls(self, action):
         gripper_position = self.gripper.get_position()
         # predicted action is in range (-1, 1) so we are normalizing it to physical units
-        new_position = [gripper_position[i] + (action[i] / 200.) for i in range(3)]
+        new_position = [gripper_position[i] +
+                        (action[i] / 200.) for i in range(3)]
         self.gripper.set_position(new_position)

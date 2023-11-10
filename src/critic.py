@@ -7,6 +7,8 @@ from catalyst_rl.rl.core import CriticSpec, EnvironmentSpec
 
 from .network import StateActionNet
 
+# State Action Critic
+
 
 class UR5StateActionCritic(CriticSpec):
     def __init__(self, state_action_net: StateActionNet, head_net: ValueHead):
@@ -51,7 +53,7 @@ class UR5StateActionCritic(CriticSpec):
         env_spec: EnvironmentSpec,
     ):
         im_width, im_height = env_spec.observation_space["cam_image"].shape[-2], \
-                              env_spec.observation_space["cam_image"].shape[-3]
+            env_spec.observation_space["cam_image"].shape[-3]
         in_channels = env_spec.observation_space["cam_image"].shape[-1]
         # action net input
         action_in_features = env_spec.action_space.shape[0]

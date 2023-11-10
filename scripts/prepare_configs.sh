@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+%config
 if [[ -z "$DBPORT" ]]; then
       DBPORT=$UseDBPORT
 fi

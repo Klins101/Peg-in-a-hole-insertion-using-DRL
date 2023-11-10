@@ -6,6 +6,8 @@ import torch.nn as nn
 
 from catalyst import utils
 
+# CNN
+
 
 def _get_convolution_net(
     in_channels: int,
@@ -149,11 +151,12 @@ class StateNet(nn.Module):
         image_net = _get_convolution_net(in_channels, **image_net_params)
 
         # calculating CNN output elements
-        CNN_out_features = CNN_output(in_channels, im_width, im_height, image_net)
+        CNN_out_features = CNN_output(
+            in_channels, im_width, im_height, image_net)
 
         main_net_in_features = CNN_out_features
 
-        main_net = _get_linear_net(main_net_in_features,**main_net_params)
+        main_net = _get_linear_net(main_net_in_features, **main_net_params)
 
         net = cls(
             image_net=image_net,
@@ -196,10 +199,10 @@ class StateActionNet(nn.Module):
     @classmethod
     def get_from_params(
         cls,
-        im_width = None,
-        im_height = None,
-        in_channels = None,
-        action_in_features = None,
+        im_width=None,
+        im_height=None,
+        in_channels=None,
+        action_in_features=None,
         image_net_params=None,
         action_net_params=None,
         main_net_params=None,
@@ -212,7 +215,8 @@ class StateActionNet(nn.Module):
         image_net = _get_convolution_net(in_channels, **image_net_params)
 
         # calculating CNN output elements
-        CNN_out_features = CNN_output(in_channels, im_width, im_height, image_net)
+        CNN_out_features = CNN_output(
+            in_channels, im_width, im_height, image_net)
 
         action_net = _get_linear_net(action_in_features, **action_net_params)
         action_net_out_features = action_net_params["features"][-1]

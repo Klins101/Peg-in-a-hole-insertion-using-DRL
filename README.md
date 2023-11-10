@@ -11,6 +11,7 @@ Simulation and training a UR5 robot to accurately insert a pin into a hole using
 
 4. **Perform training** <br>
    Run `scripts/run-training.sh`
+   ![](./images/tr.gif)
 
 5. **Inference** <br>
 Run `scripts/run-inference.sh`
